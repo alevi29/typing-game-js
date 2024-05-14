@@ -3,6 +3,9 @@ var HEIGHT = window.innerHeight - 20;
 var inStartMenu = true;
 var inSettings = false;
 var inGame = false;
+var wordRate = 1.0;
+var minWordLength = 3;
+var maxWordLength = 7;
 
 function inputHandler(event) {
     if (inStartMenu) {
@@ -28,6 +31,31 @@ function inputHandler(event) {
                 inSettings = true;
                 inStartMenu = false;
             }
+        }
+    }
+
+    else if (inSettings) {
+        if (event.key == "ArrowDown" || event.key == "ArrowUp") {
+            if (NORMAL.inFocus) {
+                NORMAL.inFocus = false;
+                HARD.inFocus = true;
+                wordRate = 1.0;
+                minWordLength = 3;
+                maxWordLength = 7;
+            }
+
+            else {
+                HARD.inFocus = false;
+                NORMAL.inFocus = true;
+                wordRate = 1.5;
+                minWordLength = 5;
+                maxWordLength = 13;
+            }
+        }
+
+        if (event.key == "Enter") {
+            inStartMenu = true;
+            inSettings = false;
         }
     }
 }
@@ -69,6 +97,9 @@ class Word {
 // initialize menu buttons
 const START = new Word(WIDTH / 2, -((HEIGHT - HEIGHT / 8) - (HEIGHT - HEIGHT / 4)) - 100, "START", true, true);
 const SETTINGS = new Word(WIDTH / 2, -100, "SETTINGS", true, false);
+const NORMAL = new Word(WIDTH / 2, HEIGHT - 2 * (HEIGHT / 8), "NORMAL", true, true);
+const HARD = new Word(WIDTH / 2, HEIGHT - 1 * (HEIGHT / 8), "HARD", true, false);
+
 
 // handle initial load animation
 function menuInit() {
@@ -104,11 +135,13 @@ function gameLoop() {
         SETTINGS.renderButton();
     }
 
-    else if (inGame) {
-
+    else if (inSettings) {
+        NORMAL.renderButton();
+        HARD.renderButton();
     }
 
-    else if (inSettings) {
+
+    else if (inGame) {
 
     }
 
